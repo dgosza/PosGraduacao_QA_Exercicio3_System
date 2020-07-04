@@ -33,7 +33,7 @@ public class DriverQA {
         if (title.equals("ERROR")) {
             switch (parBrowser) {
                 case "firefox":
-                    FirefoxDriverManager.getInstance().setup();
+//                    FirefoxDriverManager.getInstance().setup();
                     FirefoxOptions options = new FirefoxOptions();
                     options.addPreference(FirefoxDriver.MARIONETTE, true);
                     driver = new FirefoxDriver(options);
