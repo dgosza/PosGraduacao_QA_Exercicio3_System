@@ -3,6 +3,9 @@ package pages;
 import support.DriverQA;
 
 public class RegisterServer extends BasePage {
+
+    private String lastProcess;
+
     public RegisterServer(DriverQA driver) {
         super(driver);
     }
@@ -58,5 +61,21 @@ public class RegisterServer extends BasePage {
 
     public void clickSalvar() {
         driver.click("btn-save");
+    }
+
+    public void saveIdProcess() {
+        setLastProcess(driver.getText("codigo"));
+    }
+
+    private void setLastProcess(String codigo) {
+        lastProcess = codigo;
+    }
+
+    public String getLastProcess(){
+        return lastProcess;
+    }
+
+    public String verificaMsgErro() {
+        return driver.getText("error_explanation");
     }
 }

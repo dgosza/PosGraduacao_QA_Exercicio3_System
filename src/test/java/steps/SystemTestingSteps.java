@@ -3,6 +3,7 @@ package steps;
 import cucumber.api.PendingException;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
+import cucumber.api.java.en.Then;
 import org.junit.Assert;
 import pages.*;
 import support.BaseSteps;
@@ -14,6 +15,7 @@ public class SystemTestingSteps extends BaseSteps {
     private ProcessosServer processosPage = new ProcessosServer(driver);
     private RegisterServer processosRegister = new RegisterServer(driver);
     private SuccessProcessoRegister processRegisterSuccess = new SuccessProcessoRegister(driver);
+    private ReadPageProcess readPageProcess = new ReadPageProcess(driver);
 
 
     @Given("^the user is on Agapito server page$")
@@ -95,6 +97,7 @@ public class SystemTestingSteps extends BaseSteps {
     @And("^the user clicks on Register new Processo$")
     public void theUserClicksOnRegisterNewProcesso() {
         processosRegister.clickSalvar();
+        processosRegister.saveIdProcess();
     }
 
     @And("^the user should see \"([^\"]*)\" message$")
@@ -102,8 +105,46 @@ public class SystemTestingSteps extends BaseSteps {
         Assert.assertEquals(msg, processRegisterSuccess.verificaMensagemSucesso());
     }
 
+    @Then("^the user clicks on show button$")
+    public void theUserClicksOnShowButton() {
+        String idButton = processosRegister.getLastProcess();
+        processosPage.showProcesso(idButton);
+    }
+
+    @Then("^the user should see numero processo with value equal \"([^\"]*)\"$")
+    public void theUserShouldSeeNumeroProcessoWithValueEqual(String numeroProcesso) throws Throwable {
+        Assert.assertEquals(numeroProcesso, readPageProcess.verificaNumeroProcesso());
+    }
+
     @And("^the user clicks on editar button$")
     public void theUserClicksOnEditarButton() {
-        processRegisterSuccess.clickEditarButton();
+        String idButton = processosRegister.getLastProcess();
+        processosPage.updateProcess(idButton);
+    }
+
+    @And("^the user clicks on delete button$")
+    public void theUserClicksOnDeleteButton() {
+        String idButton = processosRegister.getLastProcess();
+        processosPage.deleteProcess(idButton);
+    }
+
+    @And("^the user confirms delete$")
+    public void theUserConfirmsDelete() {
+        processosPage.confirmDelete();
+    }
+
+    @Then("^the user should not see last process code$")
+    public void theUserShouldNotSeeLastProcessCode() {
+        Assert.assertFalse("There is a proccess with this code" + processosRegister.getLastProcess(), processosPage.existProcess(processosRegister.getLastProcess()));
+    }
+
+    @Then("^the user should see in the same page \"([^\"]*)\" message$")
+    public void theUserShouldSeeInTheSamePageMessage(String message) throws Throwable {
+        Assert.assertEquals(message, processosRegister.verificaMsgErro());
+    }
+
+    @And("^the user clicks on Salvar new Processo$")
+    public void theUserClicksOnSalvarNewProcesso() {
+        processosRegister.clickSalvar();
     }
 }
